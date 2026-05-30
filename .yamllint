@@ -1,0 +1,18 @@
+
+extend: deault
+
+rules:
+  line-length:
+    max: 120
+
+  indentation:
+    spaces: 2
+
+  # Keep comments readable but not pedantic.
+  comments:
+    min-spaces-from-content: 1
+
+  comments-indentation: disable
+
+  # GH workflows commonly omit '---' document start.
+  document-start: disable

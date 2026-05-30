@@ -1,0 +1,38 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-slim
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup yamllint
+        run: pip install yamllint
+
+      - name: Lint YAML files
+        run: yamllint .
+
+      # shellcheck is preinstalled on ubuntu-slim. 
+      # actionlint auto-detects shellcheck on the PATH
+      # it runs it against every `run:` block. 
+      # Verifies the integration is explicit and fails loudly if the runner image changes.
+      - name: Verify shellcheck availability
+        run: shellcheck --version
+
+      - name: Setup actionlint
+        run: |
+          bash <(curl -s https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+          sudo mv actionlint /usr/local/bin/
+
+      - name: Run actionlint
+        run: actionlint .github/workflows/*.yml
