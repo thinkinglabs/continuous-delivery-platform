@@ -1,0 +1,48 @@
+name: pipeline
+on:
+  workflow_call:
+
+jobs:
+  build:
+    name: Commit Stage
+    runs-on: ubuntu-slim
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build
+        run: echo "::notice::Building..."
+
+  deploy_to_staging:
+    name: Deploy to Staging
+    if: ${{ !failure() && !cancelled() && github.ref == 'refs/heads/main' }}
+    environment: staging
+    needs: [build]
+    runs-on: ubuntu-slim
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Deploy
+      run: echo "::notice::Deploying to staging"
+  
+  test_on_staging:
+    name: Test on Staging
+    if: ${{ !failure() && !cancelled() }}
+    environment: staging
+    needs: [deploy_to_staging]
+    runs-on: ubuntu-slim
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Run tests
+      run: echo "::notice::Running tests"
+
+  deploy_to_production:
+    name: Deploy to Production
+    environment: production
+    needs: [test_on_staging]
+    runs-on: ubuntu-slim
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Deploy
+      run: echo "::notice::Deploying to production"
