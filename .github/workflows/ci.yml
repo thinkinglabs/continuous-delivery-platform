@@ -3,33 +3,33 @@ name: ci
 on:
   push:
     branches:
-      - main
+    - main
   pull_request:
     branches:
-      - main
+    - main
 
 jobs:
   build:
     runs-on: ubuntu-slim
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+    - name: Checkout
+      uses: actions/checkout@v6
 
-      - name: Setup yamllint
-        run: pip install yamllint
+    - name: Setup yamllint
+      run: pip install yamllint
 
-      # shellcheck is preinstalled on ubuntu-slim. 
-      # actionlint auto-detects shellcheck on the PATH
-      # it runs it against every `run:` block. 
-      # Verifies the integration is explicit and fails loudly if the runner image changes.
-      - name: Verify shellcheck availability
-        run: shellcheck --version
+    # shellcheck is preinstalled on ubuntu-slim. 
+    # actionlint auto-detects shellcheck on the PATH
+    # it runs it against every `run:` block. 
+    # Verifies the integration is explicit and fails loudly if the runner image changes.
+    - name: Verify shellcheck availability
+      run: shellcheck --version
 
-      - name: Setup actionlint
-        run: |
-          bash <(curl -s https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
-          sudo mv actionlint /usr/local/bin/
+    - name: Setup actionlint
+      run: |
+        bash <(curl -s https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+        sudo mv actionlint /usr/local/bin/
 
-      - name: Lint
-        run: make lint
+    - name: Lint
+      run: make lint

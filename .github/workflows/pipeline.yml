@@ -7,10 +7,10 @@ jobs:
     name: Commit Stage
     runs-on: ubuntu-slim
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Build
-        run: echo "::notice::Building..."
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Build
+      run: echo "::notice::Building..."
 
   deploy_to_staging:
     name: Deploy to Staging
